@@ -42,3 +42,15 @@ notification.mp3
 /cache
 trace.json
 /sysinfo-????-??-??-??-??.json
+
+# Secrets / local-only credentials (never commit)
+.env
+.env.*
+*.env
+secrets/
+credentials.json
+*.pem
+*.key
+
+# Python bytecode
+*.pyc
