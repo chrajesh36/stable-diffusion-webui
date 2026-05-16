@@ -5,6 +5,7 @@ accelerate
 blendmodes
 clean-fid
 diskcache
+diffusers
 einops
 facexlib
 fastapi>=0.90.1

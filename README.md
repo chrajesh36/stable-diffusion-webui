@@ -1,9 +1,153 @@
-# Stable Diffusion web UI
-A web interface for Stable Diffusion, implemented using Gradio library.
+# Stable Diffusion Image Editor
 
-![](screenshot.png)
+This workspace contains two related Stable Diffusion apps:
 
-## Features
+- A small custom Gradio editor in `simple_sd_editor.py`.
+- A larger AUTOMATIC1111-style WebUI in `webui.py` and `modules/`.
+
+Use the simplified editor when you want a focused photo editor for realistic people generation, image-to-image edits, and inpainting. Use the full WebUI when you want the largest set of advanced controls, extensions, samplers, model switching, LoRA support, upscalers, and richer inpainting.
+
+## Quick Start: Simplified Editor
+
+Run:
+
+```bash
+./START_UI.sh
+```
+
+Or directly:
+
+```bash
+python3 simple_sd_editor.py
+```
+
+Then open `http://localhost:7860`.
+
+On first launch, the Diffusers models download automatically and are cached for later runs. The default base model is `runwayml/stable-diffusion-v1-5`; inpainting uses `runwayml/stable-diffusion-inpainting`.
+
+You can override the startup models without editing code:
+
+```bash
+SD_MODEL_ID="your/photo-model" SD_INPAINT_MODEL_ID="your/inpaint-model" ./START_UI.sh
+```
+
+## Simplified Editor Flow
+
+`START_UI.sh` is a thin launcher. It changes into the repository directory and runs `simple_sd_editor.py` with `/usr/local/bin/python3`.
+
+`simple_sd_editor.py` does these main things:
+
+- Imports Gradio, Pillow, NumPy, Diffusers, and PyTorch.
+- Calls `setup_models()` at startup.
+- Builds a Gradio `Blocks` UI with three tabs.
+- Wires each tab's button to a Python callback.
+- Adds realistic-photo defaults for Indian people portraits, negative prompts, samplers, seed handling, and aspect-aware resizing.
+
+The model setup loads three separate Diffusers pipelines:
+
+- `StableDiffusionPipeline` for text-to-image from `SD_MODEL_ID`.
+- `StableDiffusionImg2ImgPipeline` for image-to-image from `SD_MODEL_ID`.
+- `StableDiffusionInpaintPipeline` for inpainting from `SD_INPAINT_MODEL_ID`.
+
+The simplified callback path is:
+
+```text
+START_UI.sh
+  -> simple_sd_editor.py
+    -> setup_models()
+    -> Gradio tabs
+      -> generate_image()
+      -> img2img_generate()
+      -> inpaint_image()
+    -> outputs/
+```
+
+`generate_image()` creates a photo from a prompt, negative prompt, selected photo style, dimensions, sampler, seed, steps, and guidance. `img2img_generate()` preserves the uploaded image aspect ratio, resizes to a model-friendly multiple of 8, and transforms it with a prompt and strength value. `inpaint_image()` uses an inpainting-specific model, resizes the mask to match the source image, converts the mask to grayscale, and fills the white masked area from the prompt.
+
+## Realistic Indian Photo Settings
+
+The simplified editor now defaults to `Realistic Indian portrait`, which appends photo-realistic guidance such as natural brown skin tones, natural skin texture, realistic hair, DSLR photo, and soft natural light.
+
+Recommended starting points:
+
+- Text-to-image portraits: `512x768`, `35` steps, CFG `6.5`, sampler `DPM++ 2M Karras`.
+- Subtle image edits: img2img strength `0.20-0.40`.
+- Stronger clothing, background, or lighting edits: img2img strength `0.45-0.65`.
+- Inpainting: strength around `0.55`, then lower it if the face identity changes too much.
+- Negative prompt: keep the default unless you see a specific recurring flaw.
+
+For best realism, describe the person and setting plainly: age, expression, clothing, location, lighting, lens feel, and mood. Example: `middle-aged Indian man in a linen kurta, candid portrait at home, warm window light, natural skin texture, realistic DSLR photo`.
+
+## Full WebUI Flow
+
+The full WebUI is the inherited AUTOMATIC1111-style application. Its entry points are `launch.py`, `webui.py`, and `webui.sh`.
+
+The main startup path is:
+
+```text
+launch.py or webui.sh
+  -> webui.py
+    -> initialize.imports()
+    -> initialize.check_versions()
+    -> initialize.initialize()
+    -> modules.ui.create_ui()
+    -> Gradio launch
+```
+
+Important full WebUI modules:
+
+- `modules/initialize.py` sets up paths, versions, models, samplers, extensions, upscalers, VAE, textual inversion, and extra networks.
+- `modules/ui.py` builds the full Gradio interface.
+- `modules/txt2img.py` converts UI text-to-image requests into a `StableDiffusionProcessingTxt2Img` object.
+- `modules/img2img.py` converts image-to-image and inpainting UI requests into a `StableDiffusionProcessingImg2Img` object.
+- `modules/processing.py` contains the shared generation loop, including seed handling, prompt conditioning, sampling, VAE decode, postprocessing, saving, and metadata.
+- `modules/sd_models.py` discovers and loads checkpoints from the model folders.
+- `modules/scripts.py` loads extension and script hooks.
+
+The generation path is:
+
+```text
+modules.ui.create_ui()
+  -> modules.txt2img.txt2img() or modules.img2img.img2img()
+  -> modules.scripts hooks
+  -> modules.processing.process_images()
+  -> sampler
+  -> decoded image
+  -> saved output and metadata
+```
+
+## Which App Should You Use?
+
+Use `simple_sd_editor.py` for quick experiments or when you want a compact code path that is easy to edit.
+
+Use the full WebUI for the best practical image generation and editing experience. It exposes advanced features that the simplified editor does not, including sampler selection, highres fix, batch controls, richer masks, checkpoint switching, extensions, LoRAs, face restoration, and upscalers.
+
+## Current Cleanup Notes
+
+The README used to mix custom simplified-editor instructions with the upstream AUTOMATIC1111 feature list without clearly separating them. This file now treats the custom editor and the full WebUI as separate paths.
+
+The simplified editor has a few intentional tradeoffs:
+
+- It defaults to `runwayml/stable-diffusion-v1-5`, but `SD_MODEL_ID` can point to a stronger photo model.
+- It loads three separate pipelines at startup, which is simple but memory-heavy.
+- It does not expose WebUI features such as highres fix, LoRAs, VAE selection, or advanced inpainting controls.
+
+## System Requirements
+
+- RAM: 8GB minimum, 16GB recommended.
+- Disk: 10GB+ available space for models and outputs.
+- GPU: optional but recommended for faster generation.
+- Apple Silicon: supported through MPS-compatible PyTorch paths.
+
+## Prompting Tips
+
+- Be specific and detailed.
+- Include art style, such as "oil painting", "photorealistic", or "digital art".
+- Specify lighting, mood, composition, and subject details.
+- Reuse seeds when you want reproducible results.
+
+## Upstream WebUI Feature Reference
+
 [Detailed feature showcase with images](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features):
 - Original txt2img and img2img modes
 - One click install and run script (but you still must install python and git)
