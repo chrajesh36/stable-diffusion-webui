@@ -7,6 +7,8 @@ This workspace contains two related Stable Diffusion apps:
 
 Use the simplified editor when you want a focused photo editor for realistic people generation, image-to-image edits, and inpainting. Use the full WebUI when you want the largest set of advanced controls, extensions, samplers, model switching, LoRA support, upscalers, and richer inpainting.
 
+For an identity-preserving outfit-change recipe (same person, different outfit) on the full WebUI — launch with `./START_WEBUI.sh` and follow [`IDENTITY_OUTFIT_WORKFLOW.md`](IDENTITY_OUTFIT_WORKFLOW.md).
+
 ## Quick Start: Simplified Editor
 
 Run:

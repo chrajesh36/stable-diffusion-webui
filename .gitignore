@@ -54,3 +54,16 @@ credentials.json
 
 # Python bytecode
 *.pyc
+
+# Identity-outfit workflow setup: locally-installed extensions and weights
+# (covered by /extensions and /models/**/* above, listed explicitly so this
+# stays clear if those broader rules are ever loosened).
+/extensions/
+/models/ControlNet/
+/models/Stable-diffusion/*.safetensors
+/models/Stable-diffusion/*.ckpt
+/models/Stable-diffusion/*.bin
+/models/ControlNet/*.safetensors
+/models/ControlNet/*.bin
+/models/ControlNet/*.pth
+/logs/
