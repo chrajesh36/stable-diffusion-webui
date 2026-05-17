@@ -10,7 +10,13 @@ echo ""
 echo "ℹ️  First time startup will download the Stable Diffusion model (~4GB)"
 echo "📍 Model will be cached locally for future runs"
 echo ""
-echo "🌐 Open your browser to: http://localhost:7860"
+LAN_IP="$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || true)"
+echo "🌐 This Mac:    http://localhost:7860"
+if [ -n "${LAN_IP}" ]; then
+  echo "🌐 Same Wi‑Fi:  http://${LAN_IP}:7860  (phone / tablet; Gradio binds 0.0.0.0)"
+else
+  echo "🌐 Same Wi‑Fi:  http://<LAN-IP>:7860  (find IP in System Settings → Network)"
+fi
 echo ""
 echo "⏸️  Press Ctrl+C to stop the server"
 echo ""

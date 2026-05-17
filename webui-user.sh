@@ -11,8 +11,9 @@
 
 # Commandline arguments for webui.py, for example: export COMMANDLINE_ARGS="--medvram --opt-split-attention"
 # Enable the HTTP API so tests_identity/run_outfit_change_webui.py can drive img2img.
+# --listen binds to all interfaces so phones/tablets on the same Wi‑Fi can open the UI.
 # (webui.sh adds Apple Silicon defaults like --skip-torch-cuda-test on its own.)
-export COMMANDLINE_ARGS="${COMMANDLINE_ARGS:-} --api --skip-install --skip-version-check --skip-python-version-check"
+export COMMANDLINE_ARGS="${COMMANDLINE_ARGS:-} --api --listen --skip-install --skip-version-check --skip-python-version-check"
 
 # python3 executable
 #python_cmd="python3"

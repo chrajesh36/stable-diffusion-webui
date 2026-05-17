@@ -17,9 +17,9 @@ Launch on macOS Apple Silicon:
 ./START_WEBUI.sh
 ```
 
-This wrapper sets Apple Silicon friendly defaults — `PYTORCH_ENABLE_MPS_FALLBACK=1`, `--upcast-sampling`, `--no-half-vae`, `--opt-split-attention`, `--use-cpu interrogate`, and exposes the API at `/sdapi/v1/*`. It then execs `./webui.sh`, which manages the Python 3.10 venv and dependencies.
+This wrapper sets Apple Silicon friendly defaults — `PYTORCH_ENABLE_MPS_FALLBACK=1`, `--listen` (reachable on your LAN), `--upcast-sampling`, `--no-half-vae`, `--opt-split-attention`, `--use-cpu interrogate`, and exposes the API at `/sdapi/v1/*`. It then execs `./webui.sh`, which manages the Python 3.10 venv and dependencies.
 
-First boot is slow (5–20 minutes) because it installs Python dependencies, clones submodules, and loads the SDXL checkpoint into MPS. Subsequent boots are under a minute. When you see `Running on local URL: http://0.0.0.0:7860`, open `http://localhost:7860`.
+First boot is slow (5–20 minutes) because it installs Python dependencies, clones submodules, and loads the SDXL checkpoint into MPS. Subsequent boots are under a minute. When you see `Running on local URL: http://0.0.0.0:7860`, open `http://localhost:7860` on this Mac, or `http://<Mac-LAN-IP>:7860` on a phone on the same Wi‑Fi (see the banner printed by `START_WEBUI.sh`).
 
 Note for Apple Silicon: the WebUI is pinned to Python 3.10 + Torch 2.3.1. If your default `python3` is newer (3.11+), point the launcher at Python 3.10 first:
 
@@ -141,7 +141,7 @@ Or directly:
 python3 simple_sd_editor.py
 ```
 
-Then open `http://localhost:7860`.
+Then open `http://localhost:7860` on this Mac, or `http://<Mac-LAN-IP>:7860` from a phone on the same Wi‑Fi (Gradio is configured to listen on all interfaces).
 
 On first launch, the Diffusers models download automatically and are cached for later runs. The default base model is `runwayml/stable-diffusion-v1-5`; inpainting uses `runwayml/stable-diffusion-inpainting`.
 

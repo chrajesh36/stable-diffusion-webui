@@ -15,12 +15,18 @@ cd "$SCRIPT_DIR"
 # implemented on MPS instead of crashing.
 export PYTORCH_ENABLE_MPS_FALLBACK=1
 
-# Hint URL up front so the user knows where to go once the server is ready.
+# Hint URLs: --listen (via webui-user.sh) exposes the UI on your LAN for phones, etc.
+LAN_IP="$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || true)"
 echo ""
 echo "========================================================"
 echo " Stable Diffusion WebUI (Apple Silicon / MPS)"
-echo " Once the server prints 'Running on local URL', open:"
-echo "   http://localhost:7860"
+echo " Once the server prints 'Running on local URL':"
+echo "   On this Mac:  http://localhost:7860"
+if [ -n "${LAN_IP}" ]; then
+  echo "   On this Wi‑Fi: http://${LAN_IP}:7860  (phone / tablet)"
+else
+  echo "   On this Wi‑Fi: http://<your-Mac-LAN-IP>:7860  (Settings → Network)"
+fi
 echo "========================================================"
 echo ""
 
@@ -32,6 +38,7 @@ export COMMANDLINE_ARGS="${COMMANDLINE_ARGS:-} \
   --skip-version-check \
   --skip-python-version-check \
   --api \
+  --listen \
   --upcast-sampling \
   --no-half-vae \
   --opt-split-attention \
