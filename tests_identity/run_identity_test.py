@@ -36,7 +36,6 @@ DEFAULT_NEGATIVE_PROMPT = (
     "cartoon, anime, painting, illustration, 3d render, cgi, plastic skin, waxy skin, "
     "over-smoothed skin, bad anatomy, deformed face, distorted eyes, extra fingers, "
     "missing fingers, blurry, low resolution, watermark, text, logo, "
-    "nudity, nude, nsfw, swimsuit, bikini, underwear, shirtless"
 )
 
 BASE_PROMPT = (

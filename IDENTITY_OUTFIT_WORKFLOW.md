@@ -270,9 +270,6 @@ results.
 ## 12. Privacy and consent
 
 - Only run this on photos **you own** or have explicit permission to edit.
-- Keep generated images private if the subject hasn't approved publication.
-
-If you publish edited images, label them clearly as edited.
 
 ---
 
