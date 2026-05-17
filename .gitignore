@@ -67,3 +67,8 @@ credentials.json
 /models/ControlNet/*.bin
 /models/ControlNet/*.pth
 /logs/
+
+# Local WebUI run logs and generated API test outputs (large / noisy)
+/webui.log
+/tests_identity/webui_runs/
+/tests_identity/*.log

@@ -10,7 +10,9 @@
 #clone_dir="stable-diffusion-webui"
 
 # Commandline arguments for webui.py, for example: export COMMANDLINE_ARGS="--medvram --opt-split-attention"
-#export COMMANDLINE_ARGS=""
+# Enable the HTTP API so tests_identity/run_outfit_change_webui.py can drive img2img.
+# (webui.sh adds Apple Silicon defaults like --skip-torch-cuda-test on its own.)
+export COMMANDLINE_ARGS="${COMMANDLINE_ARGS:-} --api --skip-install --skip-version-check --skip-python-version-check"
 
 # python3 executable
 #python_cmd="python3"

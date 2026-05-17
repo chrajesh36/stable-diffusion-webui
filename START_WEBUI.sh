@@ -3,7 +3,8 @@
 # tuned for Apple Silicon (MPS) and identity-preserving outfit edits.
 #
 # Use this for the full-featured WebUI (img2img inpainting + ControlNet +
-# IP-Adapter FaceID + ReActor + ADetailer). For the simpler Gradio editor,
+# IP-Adapter FaceID + ADetailer). ReActor is optional and can be skipped
+# if your environment policy prohibits it. For the simpler Gradio editor,
 # use START_UI.sh instead.
 set -euo pipefail
 
@@ -27,6 +28,10 @@ echo ""
 # forwarded through to launch.py / webui.py as COMMANDLINE_ARGS.
 export COMMANDLINE_ARGS="${COMMANDLINE_ARGS:-} \
   --skip-torch-cuda-test \
+  --skip-install \
+  --skip-version-check \
+  --skip-python-version-check \
+  --api \
   --upcast-sampling \
   --no-half-vae \
   --opt-split-attention \
